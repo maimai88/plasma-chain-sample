@@ -1,1 +1,1 @@
-# go-plasma-mvp
+# plasma-chain-sample
