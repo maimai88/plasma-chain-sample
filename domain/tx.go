@@ -18,7 +18,7 @@ type TxIn struct {
 }
 
 type TxOut struct {
-	Address *Address
+	Address Address
 	Amount  uint
 }
 
@@ -35,22 +35,22 @@ func (tx *Tx) SetTxIn(index uint, blockNum uint, txIndex uint, outputIndex uint)
 	}
 }
 
-func (tx *Tx) SetTxOut(index uint, address *Address, amount uint) {
+func (tx *Tx) SetTxOut(index uint, address Address, amount uint) {
 	tx.Outputs[index] = &TxOut{
 		Address: address,
 		Amount:  amount,
 	}
 }
 
-func (tx *Tx) Hash() (*Hash, error) {
+func (tx *Tx) Hash() (Hash, error) {
 	b, err := rlp.EncodeToBytes([]interface{}{
 		tx.Inputs[0].BlockNum, tx.Inputs[0].TxIndex, tx.Inputs[0].OutputIndex,
 		tx.Inputs[1].BlockNum, tx.Inputs[1].TxIndex, tx.Inputs[1].OutputIndex,
-		tx.Outputs[0].Address.Bytes(), tx.Outputs[0].Amount,
-		tx.Outputs[1].Address.Bytes(), tx.Outputs[1].Amount,
+		tx.Outputs[0].Address, tx.Outputs[0].Amount,
+		tx.Outputs[1].Address, tx.Outputs[1].Amount,
 	})
 	if err != nil {
-		return nil, err
+		return Hash{}, err
 	}
 
 	return NewHashFromBytes(crypto.Keccak256(b)), nil
