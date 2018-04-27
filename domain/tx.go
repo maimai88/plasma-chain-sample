@@ -12,28 +12,24 @@ type Tx struct {
 	Outputs [2]*TxOut
 }
 
-type TxIn struct {
-	BlockNum    uint
-	TxIndex     uint
-	OutputIndex uint
-	Signature   Signature
-}
-
-type TxOut struct {
-	Address Address
-	Amount  uint
-}
-
 func NewTx() *Tx {
 	return &Tx{}
 }
 
 func (tx *Tx) EncodeRLP(w io.Writer) error {
+	sig0 := tx.Inputs[0].Signature
+	sig0.SwitchToHigherRIRange()
+
+	sig1 := tx.Inputs[1].Signature
+	sig1.SwitchToHigherRIRange()
+
 	return rlp.Encode(w, []interface{}{
 		tx.Inputs[0].BlockNum, tx.Inputs[0].TxIndex, tx.Inputs[0].OutputIndex,
 		tx.Inputs[1].BlockNum, tx.Inputs[1].TxIndex, tx.Inputs[1].OutputIndex,
 		tx.Outputs[0].Address, tx.Outputs[0].Amount,
 		tx.Outputs[1].Address, tx.Outputs[1].Amount,
+		sig0,
+		sig1,
 	})
 }
 
@@ -54,7 +50,12 @@ func (tx *Tx) SetTxOut(index uint, address Address, amount uint) {
 }
 
 func (tx *Tx) Hash() (Hash, error) {
-	b, err := rlp.EncodeToBytes(tx)
+	b, err := rlp.EncodeToBytes([]interface{}{
+		tx.Inputs[0].BlockNum, tx.Inputs[0].TxIndex, tx.Inputs[0].OutputIndex,
+		tx.Inputs[1].BlockNum, tx.Inputs[1].TxIndex, tx.Inputs[1].OutputIndex,
+		tx.Outputs[0].Address, tx.Outputs[0].Amount,
+		tx.Outputs[1].Address, tx.Outputs[1].Amount,
+	})
 	if err != nil {
 		return Hash{}, err
 	}
