@@ -16,7 +16,8 @@ func NewTx() *Tx {
 	return &Tx{}
 }
 
-// implements RLP Encoder interface
+// implements RLP Encoder interface.
+//
 // ref. https://godoc.org/github.com/ethereum/go-ethereum/rlp#Encoder
 func (tx *Tx) EncodeRLP(w io.Writer) error {
 	sig0 := tx.Inputs[0].Signature
