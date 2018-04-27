@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"io"
+
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rlp"
 )
@@ -26,6 +28,15 @@ func NewTx() *Tx {
 	return &Tx{}
 }
 
+func (tx *Tx) EncodeRLP(w io.Writer) error {
+	return rlp.Encode(w, []interface{}{
+		tx.Inputs[0].BlockNum, tx.Inputs[0].TxIndex, tx.Inputs[0].OutputIndex,
+		tx.Inputs[1].BlockNum, tx.Inputs[1].TxIndex, tx.Inputs[1].OutputIndex,
+		tx.Outputs[0].Address, tx.Outputs[0].Amount,
+		tx.Outputs[1].Address, tx.Outputs[1].Amount,
+	})
+}
+
 func (tx *Tx) SetTxIn(index uint, blockNum uint, txIndex uint, outputIndex uint) {
 	tx.Inputs[index] = &TxIn{
 		BlockNum:    blockNum,
@@ -43,12 +54,7 @@ func (tx *Tx) SetTxOut(index uint, address Address, amount uint) {
 }
 
 func (tx *Tx) Hash() (Hash, error) {
-	b, err := rlp.EncodeToBytes([]interface{}{
-		tx.Inputs[0].BlockNum, tx.Inputs[0].TxIndex, tx.Inputs[0].OutputIndex,
-		tx.Inputs[1].BlockNum, tx.Inputs[1].TxIndex, tx.Inputs[1].OutputIndex,
-		tx.Outputs[0].Address, tx.Outputs[0].Amount,
-		tx.Outputs[1].Address, tx.Outputs[1].Amount,
-	})
+	b, err := rlp.EncodeToBytes(tx)
 	if err != nil {
 		return Hash{}, err
 	}
