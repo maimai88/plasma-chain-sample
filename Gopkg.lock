@@ -25,7 +25,7 @@
   branch = "master"
   name = "github.com/m0t0k1ch1/fixed-merkle"
   packages = ["."]
-  revision = "4f96da1489d759c97639370a62739c39499c7e7f"
+  revision = "980d4efa5b766ed763b96eba70ff6e635c927981"
 
 [solve-meta]
   analyzer-name = "dep"

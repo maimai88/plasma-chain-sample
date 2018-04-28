@@ -70,6 +70,19 @@ func (blk *Block) MerkleRootHash() Hash {
 	return NewHashFromBytes(blk.merkleTree.Root().Bytes())
 }
 
+func (blk *Block) CreateMerkleProof(txIndex int) (MerkleProof, error) {
+	if txIndex < 0 || len(blk.Txes) <= txIndex {
+		return nil, ErrTxIndexOutOfRange
+	}
+
+	b, err := blk.merkleTree.CreateMembershipProof(txIndex)
+	if err != nil {
+		return nil, err
+	}
+
+	return MerkleProof(b), err
+}
+
 func (blk *Block) Sign(key *PrivateKey) error {
 	blkHash, err := blk.Hash()
 	if err != nil {
