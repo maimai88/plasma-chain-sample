@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"bytes"
 	"io"
 
 	"github.com/ethereum/go-ethereum/crypto"
@@ -64,6 +65,29 @@ func (tx *Tx) Hash() (Hash, error) {
 	}
 
 	return NewHashFromBytes(crypto.Keccak256(b)), nil
+}
+
+func (tx *Tx) MerkleHash() (Hash, error) {
+	txHash, err := tx.Hash()
+	if err != nil {
+		return Hash{}, err
+	}
+
+	buf := bytes.NewBuffer(txHash.Bytes())
+
+	sig0 := tx.Inputs[0].Signature
+	sig0.SwitchToHigherRIRange()
+	if _, err := buf.Write(sig0.Bytes()); err != nil {
+		return Hash{}, err
+	}
+
+	sig1 := tx.Inputs[1].Signature
+	sig1.SwitchToHigherRIRange()
+	if _, err := buf.Write(sig1.Bytes()); err != nil {
+		return Hash{}, err
+	}
+
+	return NewHashFromBytes(crypto.Keccak256(buf.Bytes())), nil
 }
 
 func (tx *Tx) Sign(inputIndex uint, key *PrivateKey) error {
