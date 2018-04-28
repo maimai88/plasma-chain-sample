@@ -44,6 +44,7 @@ func (tx *Tx) SetTxOut(index uint, address Address, amount uint) {
 	tx.Outputs[index] = &TxOut{
 		Address: address,
 		Amount:  amount,
+		IsSpent: false,
 	}
 }
 
