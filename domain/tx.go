@@ -84,12 +84,12 @@ func (tx *Tx) Sign(inputIndex uint, key *PrivateKey) error {
 		return err
 	}
 
-	sigBytes, err := key.Sign(txHash.Bytes())
+	sig, err := key.Sign(txHash.Bytes())
 	if err != nil {
 		return err
 	}
 
-	tx.Inputs[inputIndex].Signature = NewSignatureFromBytes(sigBytes)
+	tx.Inputs[inputIndex].Signature = sig
 
 	return nil
 }

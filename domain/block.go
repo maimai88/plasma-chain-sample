@@ -76,12 +76,12 @@ func (block *Block) Sign(key *PrivateKey) error {
 		return err
 	}
 
-	sigBytes, err := key.Sign(blockHash.Bytes())
+	sig, err := key.Sign(blockHash.Bytes())
 	if err != nil {
 		return err
 	}
 
-	block.Signature = NewSignatureFromBytes(sigBytes)
+	block.Signature = sig
 
 	return nil
 }

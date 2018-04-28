@@ -20,6 +20,11 @@ func NewPrivateKeyFromHex(keyHex string) (*PrivateKey, error) {
 	return &PrivateKey{privkey}, nil
 }
 
-func (key *PrivateKey) Sign(b []byte) ([]byte, error) {
-	return crypto.Sign(b, key.PrivateKey)
+func (key *PrivateKey) Sign(b []byte) (Signature, error) {
+	b, err := crypto.Sign(b, key.PrivateKey)
+	if err != nil {
+		return Signature{}, err
+	}
+
+	return NewSignatureFromBytes(b), nil
 }
