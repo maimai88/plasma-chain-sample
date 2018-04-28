@@ -38,7 +38,11 @@ func (blk *Block) Hash() (Hash, error) {
 }
 
 func (blk *Block) BuildMerkleTree() error {
-	builder, err := merkle.NewTreeBuilder(sha3.NewKeccak256(), TxMerkleTreeDepth, TxMerkleLeafSize)
+	conf, err := merkle.NewConfig(
+		sha3.NewKeccak256(),
+		TxMerkleTreeDepth,
+		TxMerkleLeafSize,
+	)
 	if err != nil {
 		return err
 	}
@@ -52,7 +56,7 @@ func (blk *Block) BuildMerkleTree() error {
 		leaves[i] = merkleHash.Bytes()
 	}
 
-	tree, err := builder.Build(leaves, true)
+	tree, err := merkle.NewTree(conf, leaves, true)
 	if err != nil {
 		return err
 	}
