@@ -24,12 +24,12 @@ func NewBlock(txes []*Tx) *Block {
 // implements RLP Encoder interface.
 //
 // ref. https://godoc.org/github.com/ethereum/go-ethereum/rlp#Encoder
-func (block *Block) EncodeRLP(w io.Writer) error {
-	return rlp.Encode(w, []interface{}{block.Txes, block.Signature})
+func (blk *Block) EncodeRLP(w io.Writer) error {
+	return rlp.Encode(w, []interface{}{blk.Txes, blk.Signature})
 }
 
-func (block *Block) Hash() (Hash, error) {
-	b, err := rlp.EncodeToBytes([]interface{}{block.Txes})
+func (blk *Block) Hash() (Hash, error) {
+	b, err := rlp.EncodeToBytes([]interface{}{blk.Txes})
 	if err != nil {
 		return Hash{}, nil
 	}
@@ -37,14 +37,14 @@ func (block *Block) Hash() (Hash, error) {
 	return NewHashFromBytes(crypto.Keccak256(b)), nil
 }
 
-func (block *Block) BuildMerkleTree() error {
+func (blk *Block) BuildMerkleTree() error {
 	builder, err := merkle.NewTreeBuilder(sha3.NewKeccak256(), TxMerkleTreeDepth, TxMerkleLeafSize)
 	if err != nil {
 		return err
 	}
 
-	leaves := make([][]byte, len(block.Txes))
-	for i, tx := range block.Txes {
+	leaves := make([][]byte, len(blk.Txes))
+	for i, tx := range blk.Txes {
 		merkleHash, err := tx.MerkleHash()
 		if err != nil {
 			return err
@@ -57,31 +57,31 @@ func (block *Block) BuildMerkleTree() error {
 		return err
 	}
 
-	block.merkleTree = tree
+	blk.merkleTree = tree
 
 	return nil
 }
 
-func (block *Block) MerkleRootHash() Hash {
-	if block.merkleTree == nil {
+func (blk *Block) MerkleRootHash() Hash {
+	if blk.merkleTree == nil {
 		return Hash{}
 	}
 
-	return NewHashFromBytes(block.merkleTree.Root().Bytes())
+	return NewHashFromBytes(blk.merkleTree.Root().Bytes())
 }
 
-func (block *Block) Sign(key *PrivateKey) error {
-	blockHash, err := block.Hash()
+func (blk *Block) Sign(key *PrivateKey) error {
+	blkHash, err := blk.Hash()
 	if err != nil {
 		return err
 	}
 
-	sig, err := key.Sign(blockHash.Bytes())
+	sig, err := key.Sign(blkHash.Bytes())
 	if err != nil {
 		return err
 	}
 
-	block.Signature = sig
+	blk.Signature = sig
 
 	return nil
 }

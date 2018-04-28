@@ -31,9 +31,9 @@ func (tx *Tx) EncodeRLP(w io.Writer) error {
 	})
 }
 
-func (tx *Tx) SetTxIn(index uint, blockNum uint, txIndex uint, outputIndex uint) {
+func (tx *Tx) SetTxIn(index uint, blkNum uint, txIndex uint, outputIndex uint) {
 	tx.Inputs[index] = &TxIn{
-		BlockNum:    blockNum,
+		BlockNum:    blkNum,
 		TxIndex:     txIndex,
 		OutputIndex: outputIndex,
 		Signature:   Signature{},
