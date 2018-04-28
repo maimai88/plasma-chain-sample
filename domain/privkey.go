@@ -11,8 +11,8 @@ type PrivateKey struct {
 	*ecdsa.PrivateKey
 }
 
-func NewPrivateKeyFromHex(keyHex string) (*PrivateKey, error) {
-	privkey, err := crypto.ToECDSA(common.FromHex(keyHex))
+func NewPrivateKeyFromHex(privkeyHex string) (*PrivateKey, error) {
+	privkey, err := crypto.ToECDSA(common.FromHex(privkeyHex))
 	if err != nil {
 		return nil, err
 	}

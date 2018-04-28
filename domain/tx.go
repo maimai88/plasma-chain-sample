@@ -78,13 +78,13 @@ func (tx *Tx) MerkleHash() (Hash, error) {
 	return newHashFromBytes(crypto.Keccak256(buf.Bytes())), nil
 }
 
-func (tx *Tx) Sign(inputIndex uint, key *PrivateKey) error {
+func (tx *Tx) Sign(inputIndex uint, privkey *PrivateKey) error {
 	txHash, err := tx.Hash()
 	if err != nil {
 		return err
 	}
 
-	sig, err := key.Sign(txHash.Bytes())
+	sig, err := privkey.Sign(txHash.Bytes())
 	if err != nil {
 		return err
 	}

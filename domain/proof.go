@@ -4,9 +4,9 @@ import "github.com/ethereum/go-ethereum/common"
 
 type MerkleProof [MerkleProofSize]byte
 
-func newMerkleProofFromBytes(b []byte) MerkleProof {
+func newMerkleProofFromBytes(proofBytes []byte) MerkleProof {
 	proof := MerkleProof{}
-	copy(proof[:], b[:])
+	copy(proof[:], proofBytes[:])
 
 	return proof
 }

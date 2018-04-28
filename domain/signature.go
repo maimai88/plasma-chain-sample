@@ -4,9 +4,9 @@ import "github.com/ethereum/go-ethereum/common"
 
 type Signature [SignatureSize]byte
 
-func newSignatureFromBytes(b []byte) Signature {
+func newSignatureFromBytes(sigBytes []byte) Signature {
 	sig := Signature{}
-	copy(sig[:], b[:])
+	copy(sig[:], sigBytes[:])
 
 	if sig[SignatureSize-1] < SignatureRIRangeBase {
 		sig[SignatureSize-1] += SignatureRIRangeBase

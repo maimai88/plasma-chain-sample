@@ -95,13 +95,13 @@ func (blk *Block) VerifyMerkleProof(txIndex int, proof MerkleProof) (bool, error
 	return blk.merkleTree.VerifyMembershipProof(txIndex, proof.Bytes())
 }
 
-func (blk *Block) Sign(key *PrivateKey) error {
+func (blk *Block) Sign(privkey *PrivateKey) error {
 	blkHash, err := blk.Hash()
 	if err != nil {
 		return err
 	}
 
-	sig, err := key.Sign(blkHash.Bytes())
+	sig, err := privkey.Sign(blkHash.Bytes())
 	if err != nil {
 		return err
 	}
