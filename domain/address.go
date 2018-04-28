@@ -11,3 +11,7 @@ func NewAddressFromHex(addressHex string) Address {
 func (address Address) Bytes() []byte {
 	return common.Address(address).Bytes()
 }
+
+func (address Address) Hex() string {
+	return common.Address(address).Hex()
+}

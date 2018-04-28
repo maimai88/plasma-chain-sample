@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/ethereum/go-ethereum/common"
+
 type Signature [SignatureLength]byte
 
 func NewSignatureFromBytes(b []byte) Signature {
@@ -15,4 +17,8 @@ func NewSignatureFromBytes(b []byte) Signature {
 
 func (sig Signature) Bytes() []byte {
 	return sig[:]
+}
+
+func (sig Signature) Hex() string {
+	return common.ToHex(sig[:])
 }
