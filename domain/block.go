@@ -4,12 +4,15 @@ import (
 	"io"
 
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/crypto/sha3"
 	"github.com/ethereum/go-ethereum/rlp"
+	merkle "github.com/m0t0k1ch1/fixed-merkle"
 )
 
 type Block struct {
-	Txes      []*Tx
-	Signature Signature
+	Txes       []*Tx
+	Signature  Signature
+	merkleTree *merkle.Tree
 }
 
 func NewBlock(txes []*Tx) *Block {
@@ -32,4 +35,37 @@ func (block *Block) Hash() (Hash, error) {
 	}
 
 	return NewHashFromBytes(crypto.Keccak256(b)), nil
+}
+
+func (block *Block) BuildMerkleTree() error {
+	builder, err := merkle.NewTreeBuilder(sha3.NewKeccak256(), TxMerkleTreeDepth, TxMerkleLeafSize)
+	if err != nil {
+		return err
+	}
+
+	leaves := make([][]byte, len(block.Txes))
+	for i, tx := range block.Txes {
+		merkleHash, err := tx.MerkleHash()
+		if err != nil {
+			return err
+		}
+		leaves[i] = merkleHash.Bytes()
+	}
+
+	tree, err := builder.Build(leaves, true)
+	if err != nil {
+		return err
+	}
+
+	block.merkleTree = tree
+
+	return nil
+}
+
+func (block *Block) MerkleRootHash() Hash {
+	if block.merkleTree == nil {
+		return Hash{}
+	}
+
+	return NewHashFromBytes(block.merkleTree.Root().Bytes())
 }

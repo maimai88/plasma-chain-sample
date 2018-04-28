@@ -29,6 +29,10 @@
   name = "github.com/ethereum/go-ethereum"
   version = "=1.8.6"
 
+[[constraint]]
+  name = "github.com/m0t0k1ch1/fixed-merkle"
+  branch = "master"
+
 [prune]
   go-tests = true
   unused-packages = true
