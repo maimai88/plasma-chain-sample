@@ -6,4 +6,6 @@ const (
 
 	TxMerkleTreeDepth = 16
 	TxMerkleLeafSize  = 32 // bytes
+
+	MerkleProofSize = TxMerkleTreeDepth * TxMerkleLeafSize // bytes
 )

@@ -76,15 +76,15 @@ func (blk *Block) MerkleRootHash() Hash {
 
 func (blk *Block) CreateMerkleProof(txIndex int) (MerkleProof, error) {
 	if txIndex < 0 || len(blk.Txes) <= txIndex {
-		return nil, ErrTxIndexOutOfRange
+		return MerkleProof{}, ErrTxIndexOutOfRange
 	}
 
 	b, err := blk.merkleTree.CreateMembershipProof(txIndex)
 	if err != nil {
-		return nil, err
+		return MerkleProof{}, err
 	}
 
-	return MerkleProof(b), err
+	return newMerkleProofFromBytes(b), err
 }
 
 func (blk *Block) Sign(key *PrivateKey) error {
