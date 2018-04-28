@@ -22,14 +22,14 @@
   version = "v1.8.6"
 
 [[projects]]
+  branch = "master"
   name = "github.com/m0t0k1ch1/fixed-merkle"
   packages = ["."]
-  revision = "55c7182b575f81cd22539fec2f60acacfe7906fa"
-  version = "v0.1.0"
+  revision = "7b0232526c5092c3d758cc118f467106da6484ff"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c3ad312bb44889461bc0daf7a0d83a30d0f99b45d9147500597c96ac21ce9cc0"
+  inputs-digest = "86e5199b7fab83eaf4f48354bafee07b58e93080c88db73a1869bd47ea358ccb"
   solver-name = "gps-cdcl"
   solver-version = 1
