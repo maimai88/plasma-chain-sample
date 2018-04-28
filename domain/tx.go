@@ -21,19 +21,13 @@ func NewTx() *Tx {
 //
 // ref. https://godoc.org/github.com/ethereum/go-ethereum/rlp#Encoder
 func (tx *Tx) EncodeRLP(w io.Writer) error {
-	sig0 := tx.Inputs[0].Signature
-	sig0.SwitchToHigherRIRange()
-
-	sig1 := tx.Inputs[1].Signature
-	sig1.SwitchToHigherRIRange()
-
 	return rlp.Encode(w, []interface{}{
 		tx.Inputs[0].BlockNum, tx.Inputs[0].TxIndex, tx.Inputs[0].OutputIndex,
 		tx.Inputs[1].BlockNum, tx.Inputs[1].TxIndex, tx.Inputs[1].OutputIndex,
-		tx.Outputs[0].Address, tx.Outputs[0].Amount,
-		tx.Outputs[1].Address, tx.Outputs[1].Amount,
-		sig0,
-		sig1,
+		tx.Outputs[0].Address.Bytes(), tx.Outputs[0].Amount,
+		tx.Outputs[1].Address.Bytes(), tx.Outputs[1].Amount,
+		tx.Inputs[0].Signature.Bytes(),
+		tx.Inputs[1].Signature.Bytes(),
 	})
 }
 
@@ -57,8 +51,8 @@ func (tx *Tx) Hash() (Hash, error) {
 	b, err := rlp.EncodeToBytes([]interface{}{
 		tx.Inputs[0].BlockNum, tx.Inputs[0].TxIndex, tx.Inputs[0].OutputIndex,
 		tx.Inputs[1].BlockNum, tx.Inputs[1].TxIndex, tx.Inputs[1].OutputIndex,
-		tx.Outputs[0].Address, tx.Outputs[0].Amount,
-		tx.Outputs[1].Address, tx.Outputs[1].Amount,
+		tx.Outputs[0].Address.Bytes(), tx.Outputs[0].Amount,
+		tx.Outputs[1].Address.Bytes(), tx.Outputs[1].Amount,
 	})
 	if err != nil {
 		return Hash{}, err
@@ -74,16 +68,10 @@ func (tx *Tx) MerkleHash() (Hash, error) {
 	}
 
 	buf := bytes.NewBuffer(txHash.Bytes())
-
-	sig0 := tx.Inputs[0].Signature
-	sig0.SwitchToHigherRIRange()
-	if _, err := buf.Write(sig0.Bytes()); err != nil {
+	if _, err := buf.Write(tx.Inputs[0].Signature.Bytes()); err != nil {
 		return Hash{}, err
 	}
-
-	sig1 := tx.Inputs[1].Signature
-	sig1.SwitchToHigherRIRange()
-	if _, err := buf.Write(sig1.Bytes()); err != nil {
+	if _, err := buf.Write(tx.Inputs[1].Signature.Bytes()); err != nil {
 		return Hash{}, err
 	}
 
