@@ -75,8 +75,8 @@ func (blk *Block) MerkleRootHash() Hash {
 }
 
 func (blk *Block) CreateMerkleProof(txIndex int) (MerkleProof, error) {
-	if txIndex < 0 || len(blk.Txes) <= txIndex {
-		return MerkleProof{}, ErrTxIndexOutOfRange
+	if err := blk.validateTxIndex(txIndex); err != nil {
+		return MerkleProof{}, err
 	}
 
 	b, err := blk.merkleTree.CreateMembershipProof(txIndex)
@@ -85,6 +85,14 @@ func (blk *Block) CreateMerkleProof(txIndex int) (MerkleProof, error) {
 	}
 
 	return newMerkleProofFromBytes(b), err
+}
+
+func (blk *Block) VerifyMerkleProof(txIndex int, proof MerkleProof) (bool, error) {
+	if err := blk.validateTxIndex(txIndex); err != nil {
+		return false, err
+	}
+
+	return blk.merkleTree.VerifyMembershipProof(txIndex, proof.Bytes())
 }
 
 func (blk *Block) Sign(key *PrivateKey) error {
@@ -99,6 +107,14 @@ func (blk *Block) Sign(key *PrivateKey) error {
 	}
 
 	blk.Signature = sig
+
+	return nil
+}
+
+func (blk *Block) validateTxIndex(txIndex int) error {
+	if txIndex < 0 || len(blk.Txes) <= txIndex {
+		return ErrTxIndexOutOfRange
+	}
 
 	return nil
 }
