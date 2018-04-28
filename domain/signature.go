@@ -2,14 +2,14 @@ package domain
 
 import "github.com/ethereum/go-ethereum/common"
 
-type Signature [SignatureLength]byte
+type Signature [SignatureSize]byte
 
 func NewSignatureFromBytes(b []byte) Signature {
 	sig := Signature{}
 	copy(sig[:], b[:])
 
-	if sig[SignatureLength-1] < SignatureRIRangeBase {
-		sig[SignatureLength-1] += SignatureRIRangeBase
+	if sig[SignatureSize-1] < SignatureRIRangeBase {
+		sig[SignatureSize-1] += SignatureRIRangeBase
 	}
 
 	return sig
