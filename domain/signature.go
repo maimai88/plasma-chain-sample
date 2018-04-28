@@ -4,7 +4,7 @@ import "github.com/ethereum/go-ethereum/common"
 
 type Signature [SignatureSize]byte
 
-func NewSignatureFromBytes(b []byte) Signature {
+func newSignatureFromBytes(b []byte) Signature {
 	sig := Signature{}
 	copy(sig[:], b[:])
 

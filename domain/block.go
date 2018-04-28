@@ -34,7 +34,7 @@ func (blk *Block) Hash() (Hash, error) {
 		return Hash{}, nil
 	}
 
-	return NewHashFromBytes(crypto.Keccak256(b)), nil
+	return newHashFromBytes(crypto.Keccak256(b)), nil
 }
 
 func (blk *Block) BuildMerkleTree() error {
@@ -71,7 +71,7 @@ func (blk *Block) MerkleRootHash() Hash {
 		return Hash{}
 	}
 
-	return NewHashFromBytes(blk.merkleTree.Root().Bytes())
+	return newHashFromBytes(blk.merkleTree.Root().Bytes())
 }
 
 func (blk *Block) CreateMerkleProof(txIndex int) (MerkleProof, error) {

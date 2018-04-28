@@ -26,5 +26,5 @@ func (key *PrivateKey) Sign(b []byte) (Signature, error) {
 		return Signature{}, err
 	}
 
-	return NewSignatureFromBytes(b), nil
+	return newSignatureFromBytes(b), nil
 }

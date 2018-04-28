@@ -4,7 +4,7 @@ import "github.com/ethereum/go-ethereum/common"
 
 type Hash common.Hash
 
-func NewHashFromBytes(b []byte) Hash {
+func newHashFromBytes(b []byte) Hash {
 	return Hash(common.BytesToHash(b))
 }
 

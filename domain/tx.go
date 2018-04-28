@@ -58,7 +58,7 @@ func (tx *Tx) Hash() (Hash, error) {
 		return Hash{}, err
 	}
 
-	return NewHashFromBytes(crypto.Keccak256(b)), nil
+	return newHashFromBytes(crypto.Keccak256(b)), nil
 }
 
 func (tx *Tx) MerkleHash() (Hash, error) {
@@ -75,7 +75,7 @@ func (tx *Tx) MerkleHash() (Hash, error) {
 		return Hash{}, err
 	}
 
-	return NewHashFromBytes(crypto.Keccak256(buf.Bytes())), nil
+	return newHashFromBytes(crypto.Keccak256(buf.Bytes())), nil
 }
 
 func (tx *Tx) Sign(inputIndex uint, key *PrivateKey) error {
