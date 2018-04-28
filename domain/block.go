@@ -69,3 +69,19 @@ func (block *Block) MerkleRootHash() Hash {
 
 	return NewHashFromBytes(block.merkleTree.Root().Bytes())
 }
+
+func (block *Block) Sign(key *PrivateKey) error {
+	blockHash, err := block.Hash()
+	if err != nil {
+		return err
+	}
+
+	sigBytes, err := key.Sign(blockHash.Bytes())
+	if err != nil {
+		return err
+	}
+
+	block.Signature = NewSignatureFromBytes(sigBytes)
+
+	return nil
+}
